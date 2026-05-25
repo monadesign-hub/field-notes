@@ -1,0 +1,10 @@
+{
+  "name": "field-notes",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Field Notes — AI Events SF Bay Area",
+  "scripts": {
+    "fetch-events": "node scripts/fetch-events.mjs"
+  }
+}
