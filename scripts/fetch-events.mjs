@@ -45,12 +45,12 @@ function isAiEvent(name, calendarName) {
   return AI_WORD_RE.test(text);
 }
 
-// ── Date bounds: now → end of next month (in local/Pacific time) ─────────────
+// ── Date bounds: today → 15 days out (in local/Pacific time) ─────────────────
+const WINDOW_DAYS = 15;
 function dateBounds() {
   const now = new Date();
   const start = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0);
-  // day 0 of (month + 2) === last day of next month
-  const end = new Date(now.getFullYear(), now.getMonth() + 2, 0, 23, 59, 59, 999);
+  const end = new Date(now.getFullYear(), now.getMonth(), now.getDate() + WINDOW_DAYS, 23, 59, 59, 999);
   return { start, end };
 }
 
@@ -145,11 +145,9 @@ function renderSection(events) {
     );
   }
 
-  const first = events[0].start, last = events[events.length - 1].start;
-  const range = `${fmt(first, { month: "short" })}–${fmt(last, { month: "short" })} ${fmt(last, { year: "numeric" })}`;
   const updated = fmt(new Date(), { month: "short", day: "numeric" });
   const meta =
-    `    <div class="up-meta">${events.length} events · ${esc(range)} · ` +
+    `    <div class="up-meta">${events.length} events · next ${WINDOW_DAYS} days · ` +
     `from <a href="https://luma.com/sf" target="_blank" rel="noopener noreferrer">Luma</a> · updated ${esc(updated)}</div>`;
 
   return `\n${meta}\n${blocks.join("\n")}\n  `;
