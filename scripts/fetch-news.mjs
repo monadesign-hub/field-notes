@@ -15,8 +15,7 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const HTML_PATH = join(HERE, "..", "index.html");
 const START_MARKER = "<!-- NEWS:START -->";
 const END_MARKER = "<!-- NEWS:END -->";
-const WINDOW_DAYS = 3; // only show news from the last N days
-const MAX_ITEMS = 6;   // safety cap for busy days
+const PER_CARD = 3; // latest N headlines per company
 const UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15) field-notes/1.0";
 
 const SOURCES = [
@@ -92,11 +91,7 @@ async function loadSource(src) {
   const items = src.kind === "rss" ? parseRss(raw) : parseAnthropic(raw);
   // newest first; items without a date keep page order (already newest-first)
   items.sort((a, b) => (b.date?.getTime() || 0) - (a.date?.getTime() || 0));
-  const cutoff = Date.now() - WINDOW_DAYS * 86400000;
-  const recent = items.filter((it) => it.date && it.date.getTime() >= cutoff);
-  // Fallback: if nothing posted in the window, still show the latest single item
-  const picked = recent.length ? recent : items.slice(0, 1);
-  return picked.slice(0, MAX_ITEMS);
+  return items.slice(0, PER_CARD);
 }
 
 // ── Rendering ────────────────────────────────────────────────────────────────
