@@ -1,0 +1,39 @@
+name: Refresh events + news
+
+on:
+  schedule:
+    # Every 6 hours, on the hour (UTC). Vercel auto-deploys when we push.
+    - cron: "0 */6 * * *"
+  workflow_dispatch: {}
+
+concurrency:
+  group: refresh
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Fetch Luma events + lab news
+        run: npm run fetch
+
+      - name: Commit + push if index.html changed
+        run: |
+          if git diff --quiet -- index.html; then
+            echo "No changes — nothing to commit."
+            exit 0
+          fi
+          git config user.name  "field-notes-bot"
+          git config user.email "field-notes-bot@users.noreply.github.com"
+          git add index.html
+          git commit -m "chore: refresh events + news ($(date -u +'%Y-%m-%d %H:%MZ'))"
+          git push
