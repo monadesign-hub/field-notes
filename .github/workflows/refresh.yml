@@ -2,8 +2,8 @@ name: Refresh events + news
 
 on:
   schedule:
-    # Every 6 hours, on the hour (UTC). Vercel auto-deploys when we push.
-    - cron: "0 */6 * * *"
+    # Once a day at 14:00 UTC (= 7am PT in summer / 6am PT in winter). Vercel auto-deploys when we push.
+    - cron: "0 14 * * *"
   workflow_dispatch: {}
 
 concurrency:
