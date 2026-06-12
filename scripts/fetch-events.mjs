@@ -45,8 +45,8 @@ function isAiEvent(name, calendarName) {
   return AI_WORD_RE.test(text);
 }
 
-// ── Date bounds: today → 15 days out (in local/Pacific time) ─────────────────
-const WINDOW_DAYS = 15;
+// ── Date bounds: today → 10 days out (in local/Pacific time) ─────────────────
+const WINDOW_DAYS = 10;
 function dateBounds() {
   const now = new Date();
   const start = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0);
